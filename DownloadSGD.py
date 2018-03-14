@@ -3,11 +3,9 @@ import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium import webdriver
 import openpyxl
+import datetime
 
 #  Acessa os dados de login fora do script, salvo numa planilha existente, para proteger as informações de credenciais
-from selenium.webdriver import DesiredCapabilities
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-
 dados = openpyxl.load_workbook('C:\\gomnet.xlsx')
 login = dados['Plan1']
 url = 'http://gomnet.ampla.com/'
@@ -40,6 +38,7 @@ if __name__ == '__main__':
         time.sleep(5)
 
     # Insere o número da Sob em seu respectivo campo e realiza a busca
+    mes = datetime.datetime.now().strftime("%m")
     with open('sobs.txt') as data:
         datalines = (line.rstrip('\r\n') for line in data)
         for line in datalines:
@@ -47,12 +46,11 @@ if __name__ == '__main__':
             window_before = driver.window_handles[0]
             try:
                 try:
-                    pdfs = len(driver.find_elements_by_partial_link_text('_SGD_'))
+                    pdfs = len(driver.find_elements_by_partial_link_text('-' + mes + '-18'))
                     for pdf in range(pdfs):
-                        driver.find_elements_by_partial_link_text('_SGD_')[pdf].click()
-                        fecha_janela()
-                        time.sleep(3)
-                        continue
+                            driver.find_elements_by_partial_link_text('-' + mes + '-18')[pdf].click()
+                            fecha_janela()
+                            continue
                 except NoSuchElementException:
                     pass
             except NoSuchElementException:
